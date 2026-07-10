@@ -3,88 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Color Cyber To-Do List</title>
+    <title>Modern Pastel To-Do List</title>
     <style>
         /* ==========================================================================
-           1. ส่วนของ CSS (ปรับสีสันให้แต่ละส่วนแตกต่างกันอย่างชัดเจน)
+           1. ส่วนของ CSS (ปรับเป็นธีมสว่าง สีพาสเทลแยกส่วนชัดเจน ไม่ดำทั้งจอแล้วครับ)
            ========================================================================== */
         
-        /* ธีมเริ่มต้น: Cyber-Neon Multi-Color */
         :root {
-            --bg-color: #0b0f19;          /* พื้นหลังสีดำอวกาศ */
-            --text-color: #ffffff;        /* ตัวหนังสือหลักสีขาวเพื่อให้เห็นชัด */
-            --text-light: #94a3b8;
+            --bg-color: #f0f4f8;          /* พื้นหลังหลักสีฟ้าอ่อนสบายตา */
+            --text-color: #1e293b;        /* ตัวหนังสือสีน้ำเงินเข้ม อ่านง่าย */
+            --text-light: #64748b;
             
-            /* แยกสีขอบและพื้นหลังของแต่ละส่วน (Section) */
-            --header-color: #f43f5e;       /* สีชมพูนีออน สำหรับส่วนหัว */
-            --dash-border: #f59e0b;        /* สีส้มทอง สำหรับ Dashboard */
-            --dash-bg: #1e1b4b;            /* พื้นหลัง Dashboard สีน้ำเงินเข้ม */
-            --form-border: #10b981;        /* สีเขียวนีออน สำหรับฟอร์มเพิ่มงาน */
-            --form-bg: #064e3b;            /* พื้นหลังฟอร์ม สีเขียวเข้ม */
-            --filter-border: #a855f7;      /* สีม่วงนีออน สำหรับระบบกรองข้อมูล */
-            --filter-bg: #3b0764;          /* พื้นหลังระบบกรอง สีม่วงเข้ม */
-            --list-border: #06b6d4;        /* สีฟ้านีออน สำหรับรายการงาน */
-            --card-bg-default: #111827;    /* พื้นหลังการ์ดงานทั่วไป */
+            /* แยกสีหวานๆ พาสเทลให้แต่ละกล่อง */
+            --dash-bg: #ffedd5;            /* Dashboard: สีส้มพาสเทล */
+            --dash-border: #f97316;
+            
+            --form-bg: #dcfce7;            /* ฟอร์มเพิ่มงาน: สีเขียวพาสเทล */
+            --form-border: #22c55e;
+            
+            --filter-bg: #f3e8ff;          /* ระบบกรองข้อมูล: สีม่วงพาสเทล */
+            --filter-border: #a855f7;
+            
+            --list-header-color: #0ea5e9;  /* หัวข้อรายการ: สีฟ้า */
+            --card-bg-default: #ffffff;    /* กล่องงานทั่วไป: สีขาวบริสุทธิ์ */
+            --card-border-default: #cbd5e1;
 
             /* ระบบปุ่ม */
-            --btn-primary: #10b981;
-            --btn-secondary: #6366f1;
+            --btn-primary: #3b82f6;
+            --btn-secondary: #64748b;
             --btn-danger: #ef4444;
 
             /* สถานะ */
-            --success-bg: #022c22;
-            --success-text: #34d399;
-            --warning-bg: #451a03;
-            --warning-text: #facc15;
+            --success-bg: #bbf7d0;
+            --success-text: #166534;
+            --warning-bg: #fef08a;
+            --warning-text: #854d0e;
             
-            --shadow: 0px 0px 12px rgba(255, 255, 255, 0.1);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
 
-        /* ธีมสลับโหมด: Retro Monochrome (ขาว-ดำมินิมอลตัดด้วยแดง) */
+        /* ธีมสลับโหมด (Dark Mode แบบนุ่มนวล ไม่มืดสนิทจนมองไม่เห็น) */
         [data-theme="dark"] {
-            --bg-color: #ffffff;
-            --text-color: #000000;
-            --text-light: #4b5563;
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --text-light: #94a3b8;
             
-            --header-color: #000000;
-            --dash-border: #000000;
-            --dash-bg: #f3f4f6;
-            --form-border: #000000;
-            --form-bg: #f3f4f6;
-            --filter-border: #000000;
-            --filter-bg: #f3f4f6;
-            --list-border: #000000;
-            --card-bg-default: #ffffff;
+            --dash-bg: #334155;
+            --dash-border: #94a3b8;
+            --form-bg: #1e293b;
+            --form-border: #3b82f6;
+            --filter-bg: #1e293b;
+            --filter-border: #a855f7;
+            
+            --list-header-color: #38bdf8;
+            --card-bg-default: #1e293b;
+            --card-border-default: #475569;
 
-            --btn-primary: #000000;
-            --btn-secondary: #4b5563;
-            --btn-danger: #dc2626;
-
-            --success-bg: #e2e8f0;
-            --success-text: #000000;
-            --warning-bg: #fef3c7;
-            --warning-text: #d97706;
-            --shadow: 4px 4px 0px #000000;
+            --btn-primary: #3b82f6;
+            --btn-secondary: #475569;
+            --btn-danger: #f43f5e;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Courier New', Courier, monospace, 'Prompt';
+            font-family: 'ChulaCharasNew', 'Sarabun', 'Prompt', sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: all 0.3s ease;
-            padding: 20px 10px;
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.1) 50%, rgba(255, 255, 255, 0.01) 50%);
-            background-size: 100% 4px;
+            padding: 30px 15px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
@@ -93,15 +88,74 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
-            border-bottom: 4px double var(--header-color);
+            border-bottom: 2px solid var(--text-light);
             padding-bottom: 15px;
         }
 
         header h1 {
             font-size: 1.8rem;
-            color: var(--header-color);
-            text-shadow: 0 0 8px var(--header-color);
+            font-weight: 700;
         }
 
         .card {
-            border
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid transparent;
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ประยุกต์ใช้สีพาสเทลแยกตามส่วน */
+        .dashboard-section {
+            background-color: var(--dash-bg);
+            border-color: var(--dash-border);
+        }
+        .dashboard-section h2 { color: var(--dash-border); }
+
+        .form-section {
+            background-color: var(--form-bg);
+            border-color: var(--form-border);
+        }
+        .form-section h2 { color: var(--form-border); }
+
+        .filter-section {
+            background-color: var(--filter-bg);
+            border-color: var(--filter-border);
+        }
+        .filter-section h2 { color: var(--filter-border); }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        /* ปุ่มกดสไตล์โมเดิร์นโค้งมน */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            color: #ffffff;
+        }
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary { background-color: var(--btn-primary); }
+        .btn-secondary { background-color: var(--btn-secondary); }
+        .btn-danger { background-color: var(--btn-danger); }
+
+        .form-group {
+            margin-bottom: 15px;
