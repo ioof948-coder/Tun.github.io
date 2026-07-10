@@ -3,64 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Pastel To-Do List</title>
+    <title>Modern Pastel To-Do List (Fixed Fonts)</title>
     <style>
         /* ==========================================================================
-           1. ส่วนของ CSS (ปรับเป็นธีมสว่าง สีพาสเทลแยกส่วนชัดเจน ไม่ดำทั้งจอแล้วครับ)
+           1. ส่วนของ CSS (ปรับฟอนต์มาตรฐานและเน้นสีตัวหนังสือเข้มชัดเจน)
            ========================================================================== */
         
         :root {
-            --bg-color: #f0f4f8;          /* พื้นหลังหลักสีฟ้าอ่อนสบายตา */
-            --text-color: #1e293b;        /* ตัวหนังสือสีน้ำเงินเข้ม อ่านง่าย */
-            --text-light: #64748b;
+            /* สีพื้นหลังหลักแบบสว่าง */
+            --bg-color: #f1f5f9;          
+            --text-color: #0f172a;        /* ปรับสีตัวหนังสือเป็นเทาเข้มเกือบดำเพื่อให้เห็นชัดสุดๆ */
+            --text-light: #475569;
             
-            /* แยกสีหวานๆ พาสเทลให้แต่ละกล่อง */
-            --dash-bg: #ffedd5;            /* Dashboard: สีส้มพาสเทล */
-            --dash-border: #f97316;
+            /* กล่อง Dashboard: สีส้มพาสเทล */
+            --dash-bg: #ffedd5;            
+            --dash-border: #ea580c;
             
-            --form-bg: #dcfce7;            /* ฟอร์มเพิ่มงาน: สีเขียวพาสเทล */
-            --form-border: #22c55e;
+            /* กล่องฟอร์มเพิ่มงาน: สีเขียวพาสเทล */
+            --form-bg: #dcfce7;            
+            --form-border: #16a34a;
             
-            --filter-bg: #f3e8ff;          /* ระบบกรองข้อมูล: สีม่วงพาสเทล */
-            --filter-border: #a855f7;
+            /* กล่องระบบกรองข้อมูล: สีม่วงพาสเทล */
+            --filter-bg: #f3e8ff;          
+            --filter-border: #9333ea;
             
-            --list-header-color: #0ea5e9;  /* หัวข้อรายการ: สีฟ้า */
-            --card-bg-default: #ffffff;    /* กล่องงานทั่วไป: สีขาวบริสุทธิ์ */
+            /* การ์ดรายการงานทั่วไป */
+            --list-header-color: #0284c7;  
+            --card-bg-default: #ffffff;    
             --card-border-default: #cbd5e1;
 
-            /* ระบบปุ่ม */
-            --btn-primary: #3b82f6;
-            --btn-secondary: #64748b;
-            --btn-danger: #ef4444;
+            /* สีปุ่ม */
+            --btn-primary: #2563eb;
+            --btn-secondary: #475569;
+            --btn-danger: #dc2626;
 
-            /* สถานะ */
+            /* ป้ายสถานะ */
             --success-bg: #bbf7d0;
-            --success-text: #166534;
+            --success-text: #14532d;
             --warning-bg: #fef08a;
-            --warning-text: #854d0e;
+            --warning-text: #713f12;
             
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
         }
 
-        /* ธีมสลับโหมด (Dark Mode แบบนุ่มนวล ไม่มืดสนิทจนมองไม่เห็น) */
+        /* ธีมสลับโหมด (เน้นใช้สีพื้นหลังเทาเข้ม ไม่ดำสนิท และตัวหนังสือขาวชัดเจน) */
         [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --text-color: #f8fafc;
-            --text-light: #94a3b8;
+            --bg-color: #1e293b;
+            --text-color: #ffffff;
+            --text-light: #cbd5e1;
             
             --dash-bg: #334155;
             --dash-border: #94a3b8;
-            --form-bg: #1e293b;
-            --form-border: #3b82f6;
-            --filter-bg: #1e293b;
-            --filter-border: #a855f7;
+            --form-bg: #334155;
+            --form-border: #38bdf8;
+            --filter-bg: #334155;
+            --filter-border: #c084fc;
             
             --list-header-color: #38bdf8;
-            --card-bg-default: #1e293b;
+            --card-bg-default: #0f172a;
             --card-border-default: #475569;
 
             --btn-primary: #3b82f6;
-            --btn-secondary: #475569;
+            --btn-secondary: #64748b;
             --btn-danger: #f43f5e;
         }
 
@@ -68,13 +72,14 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'ChulaCharasNew', 'Sarabun', 'Prompt', sans-serif;
+            /* แก้ไขตรงนี้: ใช้ฟอนต์มาตรฐานที่ทุกเครื่องมีชัวร์ๆ ตัวหนังสือไม่หายแน่นอน */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            transition: all 0.3s ease;
+            transition: background-color 0.2s, color 0.2s;
             padding: 30px 15px;
         }
 
@@ -98,18 +103,14 @@
         }
 
         .card {
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: 12px;
+            padding: 20px;
             margin-bottom: 25px;
             box-shadow: var(--shadow);
-            border: 1px solid transparent;
-            transition: transform 0.2s ease;
-        }
-        .card:hover {
-            transform: translateY(-2px);
+            border: 2px solid transparent;
         }
 
-        /* ประยุกต์ใช้สีพาสเทลแยกตามส่วน */
+        /* ใช้สีพาสเทลแยกส่วนการทำงาน */
         .dashboard-section {
             background-color: var(--dash-bg);
             border-color: var(--dash-border);
@@ -129,12 +130,12 @@
         .filter-section h2 { color: var(--filter-border); }
 
         h2 {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-size: 1.3rem;
-            font-weight: 600;
+            font-weight: 700;
         }
 
-        /* ปุ่มกดสไตล์โมเดิร์นโค้งมน */
+        /* ตกแต่งปุ่มกด */
         .btn {
             padding: 10px 20px;
             border: none;
@@ -142,15 +143,14 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
             color: #ffffff;
+            transition: background-color 0.2s, transform 0.1s;
         }
         .btn:hover {
             opacity: 0.9;
-            transform: translateY(-1px);
         }
         .btn:active {
-            transform: translateY(0);
+            transform: scale(0.98);
         }
 
         .btn-primary { background-color: var(--btn-primary); }
@@ -159,3 +159,4 @@
 
         .form-group {
             margin-bottom: 15px;
+            di
