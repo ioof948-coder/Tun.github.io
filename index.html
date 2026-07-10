@@ -1,97 +1,163 @@
-import csv
-from datetime import datetime
-
-FILENAME = "expense_tracker.csv"
-
-def initialize_file():
-    """สร้างไฟล์ CSV พร้อมส่วนหัว (Header) ถ้ายังไม่มีไฟล์อยู่"""
-    try:
-        with open(FILENAME, mode='x', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerow(["วันที่", "ประเภท", "รายการ", "จำนวนเงิน (บาท)"])
-    except FileExistsError:
-        pass
-
-def add_transaction(transaction_type):
-    """ฟังก์ชันเพิ่มรายการรายรับ หรือ รายจ่าย"""
-    print(f"\n--- เพิ่ม{transaction_type} ---")
-    detail = input("ระบุรายละเอียดรายการ: ").strip()
-    
-    while True:
-        try:
-            amount = float(input("ระบุจำนวนเงิน (บาท): "))
-            if amount <= 0:
-                print("จำนวนเงินต้องมากกว่า 0 บาท")
-                continue
-            break
-        except ValueError:
-            print("กรุณากรอกตัวเลขที่ถูกต้อง")
-
-    date_now = datetime.now().strftime("%Y-%m-%d %H:%M")
-    
-    with open(FILENAME, mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        writer.writerow([date_now, transaction_type, detail, amount])
-    
-    print(f"บันทึก {transaction_type}: {detail} จำนวน {amount} บาท เรียบร้อยแล้ว!")
-
-def view_summary():
-    """ฟังก์ชันแสดงรายการทั้งหมดและสรุปยอดคงเหลือ"""
-    print("\n--- ประวัติการเงินและสรุปยอด ---")
-    total_income = 0
-    total_expense = 0
-    
-    try:
-        with open(FILENAME, mode='r', encoding='utf-8') as file:
-            reader = csv.reader(file)
-            header = next(reader) # ข้ามหัวข้อ
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการการบ้านและการทำงาน (To-Do List SPA)</title>
+    <style>
+        /* ==========================================================================
+           CSS ส่วนที่ 1: ตัวแปรสีสำหรับ Light Mode และ Dark Mode
+           ========================================================================== */
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #4a90e2;
+            --border-color: #dddddd;
+            --shadow-color: rgba(0, 0, 0, 0.1);
             
-            print(f"{'วันที่':<18} | {'ประเภท':<6} | {'รายการ':<20} | {'จำนวนเงิน':<10}")
-            print("-" * 65)
-            
-            for row in reader:
-                date, t_type, detail, amount = row
-                amount = float(amount)
-                
-                if t_type == "รายรับ":
-                    total_income += amount
-                elif t_type == "รายจ่าย":
-                    total_expense += amount
-                    
-                print(f"{date:<18} | {t_type:<6} | {detail:<20} | {amount:<10,.2f}")
-                
-            print("-" * 65)
-            print(f"รวมรายรับ:  {total_income:,.2f} บาท")
-            print(f"รวมรายจ่าย: {total_expense:,.2f} บาท")
-            print(f"ยอดเงินคงเหลือสุทธิ: {total_income - total_expense:,.2f} บาท")
-            
-    except FileNotFoundError:
-        print("ยังไม่มีข้อมูลการเงินในระบบ เริ่มบันทึกรายการก่อนนะ!")
+            /* สีเฉพาะของสถานะและความสำคัญ */
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --success-color: #2ecc71;
+            --info-color: #3498db;
+        }
 
-def main():
-    """ฟังก์ชันหลักควบคุมเมนู"""
-    initialize_file()
-    while True:
-        print("\n===== โปรแกรมบันทึกรายรับ-รายจ่าย =====")
-        print("1. บันทึกรายรับ")
-        print("2. บันทึกรายจ่าย")
-        print("3. ดูประวัติและสรุปยอดเงิน")
-        print("4. ออกจากโปรแกรม")
-        
-        choice = input("เลือกเมนู (1-4): ").strip()
-        
-        if choice == '1':
-            add_transaction("รายรับ")
-        elif choice == '2':
-            add_transaction("รายจ่าย")
-        elif choice == '3':
-            view_summary()
-        elif choice == '4':
-            print("ขอบคุณที่ใช้งานโปรแกรม ออมเงินวันละนิดจิตแจ่มใสครับ! 👋")
-            break
-        else:
-            print("เลือกเมนูไม่ถูกต้อง กรุณาเลือก 1-4 เท่านั้น")
+        /* เมื่อเปิดใช้งาน Class "dark-mode" จะเปลี่ยนค่าตัวแปรสีทั้งหมด */
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #ffffff;
+            --border-color: #444444;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+        }
 
-if __name__ == "__main__":
-    main()
-                    
+        /* ==========================================================================
+           CSS ส่วนที่ 2: จัดการ Layout และความสวยงาม (Responsive Design)
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Sarabun', sans-serif; /* ใช้ฟอนต์ที่อ่านง่ายสำหรับภาษาไทย */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s; /* ทำให้เวลาเปลี่ยนโหมดมืดจะละมุนขึ้น */
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header และปุ่มเปลี่ยนโหมด */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .btn-theme {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* การจัดแต่ง Card (กล่องข้อมูล) */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        /* ส่วนของ Dashboard (ใช้ Grid Layout เพื่อรองรับมือถือ) */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-box {
+            background-color: var(--bg-color);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* จัดแต่งฟอร์มกรอกข้อมูล และ ส่วนค้นหา */
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .btn-block {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* รายการ Task (การบ้าน) */
+        .task-item {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            border-left: 6px solid var(--border-color);
+            margin-bottom: 10px;
+            background-color: var(--card-bg);
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        /* เปลี่ยนสีขอบตามระดับความสำคัญ */
+        .priority-high { border-left-color: var(--danger-color); }
+        .priority-medium { border-left-color: var(--warning-color); }
+  
