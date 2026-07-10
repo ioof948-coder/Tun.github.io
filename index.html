@@ -1,155 +1,97 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro Cyber To-Do List (All-in-One)</title>
-    <style>
-        /* ==========================================================================
-           1. ส่วนของ CSS (ตกแต่งสไตล์ Retro Cyber-Neon / Matrix)
-           ========================================================================== */
+import csv
+from datetime import datetime
+
+FILENAME = "expense_tracker.csv"
+
+def initialize_file():
+    """สร้างไฟล์ CSV พร้อมส่วนหัว (Header) ถ้ายังไม่มีไฟล์อยู่"""
+    try:
+        with open(FILENAME, mode='x', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(["วันที่", "ประเภท", "รายการ", "จำนวนเงิน (บาท)"])
+    except FileExistsError:
+        pass
+
+def add_transaction(transaction_type):
+    """ฟังก์ชันเพิ่มรายการรายรับ หรือ รายจ่าย"""
+    print(f"\n--- เพิ่ม{transaction_type} ---")
+    detail = input("ระบุรายละเอียดรายการ: ").strip()
+    
+    while True:
+        try:
+            amount = float(input("ระบุจำนวนเงิน (บาท): "))
+            if amount <= 0:
+                print("จำนวนเงินต้องมากกว่า 0 บาท")
+                continue
+            break
+        except ValueError:
+            print("กรุณากรอกตัวเลขที่ถูกต้อง")
+
+    date_now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    
+    with open(FILENAME, mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow([date_now, transaction_type, detail, amount])
+    
+    print(f"บันทึก {transaction_type}: {detail} จำนวน {amount} บาท เรียบร้อยแล้ว!")
+
+def view_summary():
+    """ฟังก์ชันแสดงรายการทั้งหมดและสรุปยอดคงเหลือ"""
+    print("\n--- ประวัติการเงินและสรุปยอด ---")
+    total_income = 0
+    total_expense = 0
+    
+    try:
+        with open(FILENAME, mode='r', encoding='utf-8') as file:
+            reader = csv.reader(file)
+            header = next(reader) # ข้ามหัวข้อ
+            
+            print(f"{'วันที่':<18} | {'ประเภท':<6} | {'รายการ':<20} | {'จำนวนเงิน':<10}")
+            print("-" * 65)
+            
+            for row in reader:
+                date, t_type, detail, amount = row
+                amount = float(amount)
+                
+                if t_type == "รายรับ":
+                    total_income += amount
+                elif t_type == "รายจ่าย":
+                    total_expense += amount
+                    
+                print(f"{date:<18} | {t_type:<6} | {detail:<20} | {amount:<10,.2f}")
+                
+            print("-" * 65)
+            print(f"รวมรายรับ:  {total_income:,.2f} บาท")
+            print(f"รวมรายจ่าย: {total_expense:,.2f} บาท")
+            print(f"ยอดเงินคงเหลือสุทธิ: {total_income - total_expense:,.2f} บาท")
+            
+    except FileNotFoundError:
+        print("ยังไม่มีข้อมูลการเงินในระบบ เริ่มบันทึกรายการก่อนนะ!")
+
+def main():
+    """ฟังก์ชันหลักควบคุมเมนู"""
+    initialize_file()
+    while True:
+        print("\n===== โปรแกรมบันทึกรายรับ-รายจ่าย =====")
+        print("1. บันทึกรายรับ")
+        print("2. บันทึกรายจ่าย")
+        print("3. ดูประวัติและสรุปยอดเงิน")
+        print("4. ออกจากโปรแกรม")
         
-        /* ธีมเริ่มต้น: Cyber-Neon (น้ำเงิน-ชมพู) */
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #38bdf8;
-            --text-light: #94a3b8;
-            --border-color: #f43f5e;
-            --primary-color: #10b981;
-            --primary-hover: #059669;
-            --secondary-color: #6366f1;
-            --danger-color: #f43f5e;
-            --danger-hover: #e11d48;
-            --success-bg: #064e3b;
-            --success-text: #34d399;
-            --warning-bg: #78350f;
-            --warning-text: #fbbf24;
-            --shadow: 0px 0px 15px rgba(244, 63, 94, 0.4);
-        }
+        choice = input("เลือกเมนู (1-4): ").strip()
+        
+        if choice == '1':
+            add_transaction("รายรับ")
+        elif choice == '2':
+            add_transaction("รายจ่าย")
+        elif choice == '3':
+            view_summary()
+        elif choice == '4':
+            print("ขอบคุณที่ใช้งานโปรแกรม ออมเงินวันละนิดจิตแจ่มใสครับ! 👋")
+            break
+        else:
+            print("เลือกเมนูไม่ถูกต้อง กรุณาเลือก 1-4 เท่านั้น")
 
-        /* ธีมสลับโหมด: Matrix-Hacker (ดำ-เขียว) */
-        [data-theme="dark"] {
-            --bg-color: #050b05;
-            --card-bg: #0d1a0d;
-            --text-color: #22c55e;
-            --text-light: #16a34a;
-            --border-color: #22c55e;
-            --primary-color: #16a34a;
-            --primary-hover: #15803d;
-            --secondary-color: #14532d;
-            --danger-color: #dc2626;
-            --danger-hover: #991b1b;
-            --success-bg: #14532d;
-            --success-text: #4ade80;
-            --warning-bg: #451a03;
-            --warning-text: #facc15;
-            --shadow: 0px 0px 15px rgba(34, 197, 94, 0.5);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Courier New', Courier, monospace, 'Prompt';
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
-            padding: 20px 10px;
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.15) 50%, rgba(255, 255, 255, 0.02) 50%);
-            background-size: 100% 4px; /* เอฟเฟกต์เส้นสแกนจอเก่า */
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            border-bottom: 3px double var(--border-color);
-            padding-bottom: 15px;
-        }
-
-        header h1 {
-            font-size: 1.8rem;
-            text-shadow: 0 0 10px var(--text-color);
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 3px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: var(--shadow);
-        }
-
-        h2 {
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-            color: #ffffff;
-            text-shadow: 0 0 5px var(--border-color);
-        }
-
-        /* ปุ่มกดสไตล์ตู้เกม Arcade */
-        .btn {
-            padding: 10px 15px;
-            border: 2px solid #000;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-family: inherit;
-            box-shadow: 3px 3px 0px #000;
-            transition: all 0.1s;
-        }
-
-        .btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px #000;
-        }
-
-        .btn-primary { background-color: var(--primary-color); color: #000; }
-        .btn-primary:hover { background-color: var(--primary-hover); }
-        .btn-secondary { background-color: var(--secondary-color); color: #fff; }
-        .btn-danger { background-color: var(--danger-color); color: #000; }
-        .btn-danger:hover { background-color: var(--danger-hover); }
-
-        .form-group {
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-        }
-        .form-group label { margin-bottom: 5px; font-weight: bold; }
-        .form-group input, .form-group select {
-            padding: 10px;
-            border: 2px solid var(--text-color);
-            border-radius: 6px;
-            background-color: #000000;
-            color: #ffffff;
-            font-family: inherit;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-        }
-        .form-buttons { display: flex; gap: 10px; margin-top: 10px; }
-
-        /* แดชบอร์ดภาพรวม */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .stat-box {
-            padding: 12px;
-            text-align: cent
+if __name__ == "__main__":
+    main()
+                    
